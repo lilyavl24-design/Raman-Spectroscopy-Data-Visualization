@@ -1,0 +1,26 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 1) Use the 'r' to get data path, follow this format to find the files in your computer
+file_path = r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName1.txt'
+
+# 2) Load the data and create the plot
+data = pd.read_csv(file_path, sep=r'\s+', engine='python', header=None, comment='#')
+    
+# 2.1) Name the colums in the .txt file  
+data.columns = ['Wavenumber', 'Intensity']
+
+# 2.2) Convert to numeric to erase test strings to plot
+data['Wavenumber'] = pd.to_numeric(data['Wavenumber'], errors='coerce')
+data['Intensity'] = pd.to_numeric(data['Intensity'], errors='coerce')
+data = data.dropna() # Remove any lines that weren't numbers
+
+# 2.3) Create the plot
+plt.figure(figsize = (10, 6)) # changes figure dimensions (landscape or portrait)
+plt.plot(data['Wavenumber'], data['Intensity'], color = 'blue', linewidth = 1) # controls the visual features of the data plotted
+
+plt.xlabel('x-axis title')
+plt.ylabel('y-axis title')
+plt.title('Figure Title')
+plt.grid(True, alpha = 0.3)
+plt.show()
