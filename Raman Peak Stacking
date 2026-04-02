@@ -1,0 +1,88 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
+from matplotlib.ticker import ScalarFormatter
+
+# **NAME**
+
+# 1) Use the 'r' to get data path, follow this format to find the files in your computer
+# Add as many files as you want, just make sure to document the file path as shown below
+files = [r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName1.txt', #1
+         r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName2.txt', #2
+         r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName3.txt', #3
+         r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName4.txt', #4
+         r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName5.txt' #5
+]
+
+# 2)  Assign labels and colors
+# 2.1) Assign labels for each data point (will be in order written above)
+labels = ['data 1 name', 'data 2 name', 'data 3 name', 'data 4 name', 'data 5 name']
+# 2.2) Assign a color to each data set
+colors = ['red', 'orange', 'yellow', 'green', 'blue']
+
+
+
+# 3) Loop through the files and plot
+plt.figure(figsize=(6, 10)) # makes the data in portrait mode so peaks are more prominent
+peak_height = 5000 
+gap_size = 1100
+
+current_stack_height = 0
+
+for i in range(len(files)):
+    # 3.1) load data
+    data = pd.read_csv(files[i], sep=r'\s+', engine='python', header=None, comment='#',skiprows=5, usecols=[0, 1])
+
+    data.columns = ['Wavenumber', 'Intensity'] # name the colums in the .txt file
+    data = data.apply(pd.to_numeric, errors='coerce').dropna()
+    intensity_raw = data['Intensity']-data['Intensity'].min() 
+    
+
+    # 3.2) Scale the data relative to eachother
+    intensity_scaled = intensity_raw / intensity_raw.max() * peak_height
+    offset = i * gap_size # get offset
+    
+    
+    # 3.3) Plot
+    plt.plot(data['Wavenumber'], intensity_scaled + offset, 
+             label=labels[i], color=colors[i], linewidth=0.5)
+
+    
+
+# 4) Labeling axis' and figure, along with altering the legend location on the figure
+plt.ylabel('y-axis name')
+plt.xlabel('x-axis name')
+plt.title('Figure Name')
+plt.legend(loc='upper left', fontsize='small', ncol=2)
+
+
+# 5) Formatting
+ax = plt.gca()
+
+# 5.1) To get the y-axis to be in scientific notation, add this code
+y_formatter = ScalarFormatter(useMathText=True)
+y_formatter.set_scientific(True)
+y_formatter.set_powerlimits((3, 3)) # This forces 10^3 specifically
+ax.yaxis.set_major_formatter(y_formatter)
+
+# Set locator
+ax.yaxis.set_major_locator(ticker.MultipleLocator(1000))
+
+# 5.2.1) Set thick (major) gridlines where you want on the x and y-axis
+ax.xaxis.set_major_locator(ticker.MultipleLocator(100))
+ax.yaxis.set_major_locator(ticker.MultipleLocator(1000))
+
+# 5.2.2) Set thin (minor) gridlines where you want on the x and y-axis
+ax.xaxis.set_minor_locator(ticker.MultipleLocator(50))
+ax.yaxis.set_minor_locator(ticker.MultipleLocator(500))
+
+# 5.3) Add in gridlines and control gridline properties
+plt.grid(which='major', axis='both', linestyle='-', linewidth=0.8, alpha=0.5)
+plt.grid(which='minor', axis='both', linestyle=':', linewidth=0.5, alpha=0.3)
+
+# 5.4) To show the shift clearly, we focus on the X-axis
+plt.xlim(100, 900) # controls x-axis range
+plt.show()
+
+
+
