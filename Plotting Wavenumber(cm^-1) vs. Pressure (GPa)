@@ -21,7 +21,7 @@ peak_centers = []
 valid_pressures = []
 
 # Initial expected position of the first peak (lowest pressure)
-current_peak_pos = 183
+current_peak_pos = 183 # Change this numebr to be where you expect the first peak to be
 
 for i in range(len(files)):
     try:
@@ -30,8 +30,8 @@ for i in range(len(files)):
         data = data.apply(pd.to_numeric, errors='coerce').dropna()
 
         # Look left and right around where the peak was last seen
-        low_bound = current_peak_pos - 20
-        high_bound = current_peak_pos + 40 # Higher bound is larger to account for the peak shifting up
+        low_bound = current_peak_pos - 20 # Set the lower bound
+        high_bound = current_peak_pos + 40 # Set the higher bound larger to account for the peak shifting up
 
         # Bound the peak range from numbers given above
         mask = (data['Wavenumber'] >= low_bound) & (data['Wavenumber'] <= high_bound)
