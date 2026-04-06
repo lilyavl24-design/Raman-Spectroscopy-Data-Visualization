@@ -1,0 +1,80 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.signal import savgol_filter
+
+# ---Name---
+
+# List of your data files
+files = [
+         r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName1.txt', #1
+         r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName2.txt', #2
+         r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName3.txt', #3
+         r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName4.txt', #4
+         r'C:\Users\Name\Downloads\Folder\Sub-Foldern\FileName5.txt' #5
+
+]
+
+pressures = [1, 2, 3, 4, 5]
+
+peak_centers = []
+valid_pressures = []
+
+# Initial expected position of the first peak (lowest pressure)
+current_peak_pos = 183
+
+for i in range(len(files)):
+    try:
+        data = pd.read_csv(files[i], sep=r'\s+', engine='python', header=None, skiprows=5, usecols=[0, 1])
+        data.columns = ['Wavenumber', 'Intensity']
+        data = data.apply(pd.to_numeric, errors='coerce').dropna()
+
+        # Look left and right around where the peak was last seen
+        low_bound = current_peak_pos - 20
+        high_bound = current_peak_pos + 40 # Higher bound is larger to account for the peak shifting up
+
+        # Bound the peak range from numbers given above
+        mask = (data['Wavenumber'] >= low_bound) & (data['Wavenumber'] <= high_bound)
+        subset = data[mask].copy()
+
+        if not subset.empty:
+            # Baseline subtraction to ignore the slope
+            x = subset['Wavenumber'].values
+            y = subset['Intensity'].values
+            line = np.poly1d(np.polyfit([x[0], x[-1]], [y[0], y[-1]], 1))
+            subset['Corrected'] = y - line(x)
+
+            # Smooth the data
+            subset['Smooth'] = savgol_filter(subset['Corrected'], window_length=21, polyorder=3)
+            
+            # Find the peak
+            peak_idx = subset['Smooth'].idxmax()
+            found_wavenumber = subset.loc[peak_idx, 'Wavenumber']
+            
+            # Update current_peak_pos so the next file looks in the right place from the found peak
+            current_peak_pos = found_wavenumber
+            
+            peak_centers.append(found_wavenumber)
+            valid_pressures.append(pressures[i])
+
+    except:
+        continue
+
+# Plotting
+plt.figure(figsize=(10, 6))
+plt.plot(valid_pressures, peak_centers, color='red', marker='o', linestyle='-', linewidth=1.5, markeredgecolor='red')
+
+
+# OPTIONAL: Add this line if you want to highlight a specific range of data 
+# plt.axvspan(low bound, highbound, color, alpha, name of section)
+# Can change to be horizontal by using plt.ayvspan
+plt.axvspan(18, 24, color='peachpuff', alpha=0.5, label='Structural Change') 
+
+plt.title('Title', fontsize=14, fontweight='bold')
+plt.xlabel('Pressure (GPa)', fontsize=12)
+plt.ylabel('Wavenumber (cm$^{-1}$)', fontsize=12)
+
+plt.grid(True, linestyle='--', alpha=0.5)
+plt.legend()
+plt.tight_layout()
+plt.show()
