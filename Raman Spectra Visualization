@@ -84,5 +84,9 @@ plt.grid(which='minor', axis='both', linestyle=':', linewidth=0.5, alpha=0.3)
 plt.xlim(100, 900) # controls x-axis range
 plt.show()
 
+# 6) Increase Resolution
+import matplotlib.pyplot as plt
+plt.rcParams['figure.dpi'] = 300 
+
 
 
