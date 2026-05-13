@@ -5,9 +5,10 @@ increasing pressures. It takes spectra data from a raw .txt file and transforms 
 can apply fit models to peaks to generate an accurate wavenumber vs. pressure graph and compare different sample 
 data sets.
 
-Libraries used: numpy, scipy, matplotlib, pandas, lmfit
+This library was developed to analyze bridgmanite samples at increasing pressures in a diamond anvil cell. Ramam 
+measurements were taken at each pressure step and downloaded in a .txt file.
 
-This repository is a work in progress and will be updated when necessary.
+Required Libraries: numpy, scipy, matplotlib, pandas, lmfit
 
 Set Up Instructions for Windows computer:
 1) Download PythonPI (Python 3.14)
@@ -21,4 +22,5 @@ Set Up Instructions for Windows computer:
       - pip install lmfit
 4) Now you should be able to open the IDLE Shell window and start coding
 
+This repository is a work in progress and will be updated when necessary.
 
