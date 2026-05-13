@@ -78,3 +78,7 @@ plt.grid(True, linestyle='--', alpha=0.5)
 plt.legend()
 plt.tight_layout()
 plt.show()
+
+# Increase Resolution
+import matplotlib.pyplot as plt
+plt.rcParams['figure.dpi'] = 300 
