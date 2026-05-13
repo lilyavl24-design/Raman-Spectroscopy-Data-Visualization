@@ -24,3 +24,7 @@ plt.ylabel('y-axis title')
 plt.title('Figure Title')
 plt.grid(True, alpha = 0.3)
 plt.show()
+
+# 3) Increase Resolution
+import matplotlib.pyplot as plt
+plt.rcParams['figure.dpi'] = 300 
