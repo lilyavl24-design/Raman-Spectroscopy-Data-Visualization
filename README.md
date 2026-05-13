@@ -5,12 +5,14 @@ increasing pressures. It takes spectra data from a raw .txt file and transforms 
 can apply fit models to peaks to generate an accurate wavenumber vs. pressure graph and compare different sample 
 data sets.
 
+Libraries used: numpy, scipy, matplotlib, pandas, lmfit
+
 This repository is a work in progress and will be updated when necessary.
 
 Set Up Instructions for Windows computer:
 1) Download PythonPI (Python 3.14)
 2) Open Windows home tab and type 'cmd' into the search bar to open the command window
-3) In the command window type the following and press enter after each command:
+3) In the command window type the following and press enter after each command to update and download libraries:
       - python -m ensurepip --upgrade
       - pip install numpy
       - pip install scipy
